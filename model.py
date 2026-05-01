@@ -1,5 +1,5 @@
 import csv
-import datetime
+from datetime import datetime, timezone
 import os
 import shutil
 import pandas as pd
@@ -36,7 +36,9 @@ def classify_image(image_path: str, probability_threshold: int = 0) -> tuple[str
     return results
 
 def scan_image(image_path: str, label: int, user_id: int):
-    filename = f'{user_id}_{datetime.utcnow().timestamp()}.{image_path.split(".")[-1]}'
+    ext = Image.open(image_path).format.lower()
+    ts = int(datetime.now(timezone.utc).timestamp())
+    filename = f'{user_id}_{ts}.{ext}'
     shutil.copy(image_path, os.path.join('pending_images', filename))
     with open('pending_images_dataset.csv', 'a', newline='') as f:
         writer = csv.writer(f)
