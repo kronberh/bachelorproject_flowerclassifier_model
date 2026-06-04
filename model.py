@@ -5,13 +5,13 @@ import shutil
 import torch
 from PIL import Image
 from tqdm import tqdm
-from torchvision.models import resnet50
+from torchvision.models import resnet18
 from dataset import PendingImagesDataset, transform
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 device
 
-model = resnet50(weights=None)
+model = resnet18(weights=None)
 model.fc = torch.nn.Linear(model.fc.in_features, 299)
 model.load_state_dict(torch.load('flower_classifier.pth', map_location=device))
 model.to(device)
@@ -50,7 +50,7 @@ def process_pending_images():
     
     loader = torch.utils.data.DataLoader(dataset, batch_size=64, shuffle=True)
     criterion = torch.nn.CrossEntropyLoss()
-    optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
+    optimizer = torch.optim.Adadelta(model.parameters())
 
     model.train()
     for images, labels in tqdm(loader):

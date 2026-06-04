@@ -2,7 +2,7 @@ import os
 import pandas as pd
 from PIL import Image
 import torchvision.transforms as T
-from torch.utils.data import Dataset, DataLoader
+from torch.utils.data import Dataset
 
 transform = T.Compose([
     T.Resize(224),
